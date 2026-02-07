@@ -1,0 +1,7 @@
+# Don't commit personal files (unless you want to)
+assets/photo.jpg
+assets/music.mp3
+
+# OS files
+.DS_Store
+Thumbs.db

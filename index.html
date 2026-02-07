@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffe5ec 0%, #fff0f5 50%, #ffe5ec 100%);
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        /* ==================== FLOATING HEARTS ANIMATION ==================== */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        .floating-heart {
+            position: fixed;
+            font-size: 2rem;
+            animation: float 6s ease-in infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ==================== PAGE 1 - PROPOSAL SCREEN ==================== */
+        .page-1 {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            opacity: 1;
+            transition: opacity 0.8s ease;
+        }
+
+        .page-1.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .proposal-title {
+            font-size: clamp(28px, 8vw, 48px);
+            color: #d63384;
+            text-align: center;
+            margin-bottom: 60px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            animation: pulse-title 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-title {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* YES BUTTON */
+        .btn-yes {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c2185b 100%);
+            color: white;
+            padding: 18px 50px;
+            font-size: clamp(16px, 5vw, 22px);
+            box-shadow: 0 10px 30px rgba(198, 40, 40, 0.3);
+        }
+
+        .btn-yes:hover,
+        .btn-yes:active {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(198, 40, 40, 0.5);
+        }
+
+        .btn-yes.heartbeat {
+            animation: heartbeat 0.6s ease-in-out;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.1);
+            }
+            50% {
+                transform: scale(1);
+            }
+            75% {
+                transform: scale(1.15);
+            }
+        }
+
+        /* NO BUTTON */
+        .btn-no {
+            background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 100%);
+            color: #424242;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .btn-no:hover {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+        }
+
+        /* PLAYFUL MESSAGE */
+        .playful-message {
+            position: fixed;
+            font-size: 24px;
+            pointer-events: none;
+            animation: message-pop 2s ease-out forwards;
+            z-index: 50;
+        }
+
+        @keyframes message-pop {
+            0% {
+                opacity: 1;
+                transform: scale(0.5) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.2) translateY(-100px);
+            }
+        }
+
+        /* ==================== PAGE 2 - YES SCREEN ==================== */
+        .page-2 {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
+
+        .page-2.active {
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        .photo-container {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .proposal-photo {
+            width: clamp(200px, 80vw, 400px);
+            height: clamp(200px, 80vw, 400px);
+            border-radius: 20px;
+            object-fit: cover;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border: 5px solid #ff6b9d;
+            animation: zoom-in 1s ease-out;
+        }
+
+        @keyframes zoom-in {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .message {
+            text-align: center;
+            color: #d63384;
+            font-size: clamp(18px, 5vw, 28px);
+            line-height: 1.8;
+            max-width: 600px;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .message strong {
+            display: block;
+            font-size: clamp(20px, 6vw, 32px);
+            margin: 15px 0;
+            font-weight: 700;
+        }
+
+        .footer {
+            font-size: 16px;
+            color: #c2185b;
+            margin-top: 30px;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        /* ==================== CONFETTI ANIMATION ==================== */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .confetti-piece {
+            animation: fall 3s linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ==================== RESPONSIVE DESIGN ==================== */
+        @media (max-width: 768px) {
+            .button-container {
+                gap: 15px;
+            }
+
+            .btn {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+
+            .proposal-title {
+                margin-bottom: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+            }
+
+            .proposal-title {
+                margin-bottom: 30px;
+                font-size: 24px;
+            }
+
+            .button-container {
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .btn {
+                padding: 12px 25px;
+                font-size: 14px;
+            }
+
+            .message {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== PAGE 1: PROPOSAL ==================== -->
+    <div class="page-1" id="page1">
+        <h1 class="proposal-title">Will you be my Valentine, loveyy?? 💕</h1>
+        
+        <div class="button-container">
+            <!-- YES BUTTON - Takes you to the YES screen -->
+            <button class="btn btn-yes" id="btnYes">YES 💗</button>
+            
+            <!-- NO BUTTON - Runs away on hover/tap -->
+            <button class="btn btn-no" id="btnNo">NO</button>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 2: YES SCREEN ==================== -->
+    <div class="page-2" id="page2">
+        <!-- Photo from assets folder -->
+        <div class="photo-container">
+            <img src="assets/photo.jpg" alt="Our Photo" class="proposal-photo">
+        </div>
+
+        <!-- Main Message -->
+        <div class="message">
+            <p>I know you already are my girlfriend,<br>but every day I still want to choose you again 💗</p>
+            <strong>Happy Propose Day, my jaan.<br>Will you always be my Valentine? 🌹</strong>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Made with too much love by Devyy 😌
+        </div>
+    </div>
+
+    <script>
+        // ==================== CONFIGURATION ==================== 
+        // Edit these values to customize the messages and behaviors
+
+        const CONFIG = {
+            // Messages shown near the NO button on each attempt
+            playfulMessages: [
+                "Arre 😭",
+                "Nice try 👀",
+                "That button is broken 🤭",
+                "Try again cutie 😘"
+            ],
+            // Distance the NO button moves on each attempt
+            moveDistance: 100,
+            // Speed of movement
+            moveSpeed: 0.2
+        };
+
+        // ==================== DOM ELEMENTS ==================== 
+        const page1 = document.getElementById('page1');
+        const page2 = document.getElementById('page2');
+        const btnYes = document.getElementById('btnYes');
+        const btnNo = document.getElementById('btnNo');
+
+        // ==================== STATE VARIABLES ==================== 
+        let noButtonClickCount = 0;
+        let isPage2Active = false;
+
+        // ==================== FLOATING HEARTS GENERATION ==================== 
+        /**
+         * Creates floating hearts that drift across the page
+         * Change the emoji or frequency as desired
+         */
+        function createFloatingHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = '💗';
+                heart.style.left = Math.random() * window.innerWidth + 'px';
+                heart.style.top = '-50px';
+                heart.style.fontSize = Math.random() * 20 + 20 + 'px';
+                heart.style.animationDuration = (Math.random() * 3 + 6) + 's';
+
+                document.body.appendChild(heart);
+
+                // Remove element after animation completes
+                setTimeout(() => heart.remove(), 8000);
+            }, 500);
+        }
+
+        // ==================== CONFETTI ANIMATION ==================== 
+        /**
+         * Creates falling confetti when YES is clicked
+         * Customize colors and emoji in this function
+         */
+        function createConfetti() {
+            const confettiPieces = 50;
+            const colors = ['#ff6b9d', '#c2185b', '#ff1744', '#ffb3c1'];
+            const emojis = ['💕', '💗', '💖', '🌹', '✨'];
+
+            for (let i = 0; i < confettiPieces; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti confetti-piece';
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.top = '-10px';
+
+                    // Mix of emoji and colored circles
+                    if (Math.random() > 0.3) {
+                        confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                        confetti.style.fontSize = '20px';
+                    } else {
+                        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                        confetti.style.borderRadius = '50%';
+                    }
+
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confetti);
+
+                    // Clean up
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 30);
+            }
+        }
+
+        // ==================== NO BUTTON BEHAVIOR ==================== 
+        /**
+         * Makes the NO button run away from cursor/tap
+         * On each attempt, the button moves further away
+         * Shows playful messages
+         */
+        function handleNoButtonInteraction(event) {
+            event.preventDefault();
+            noButtonClickCount++;
+
+            // Calculate random position
+            const randomX = (Math.random() - 0.5) * (CONFIG.moveDistance * noButtonClickCount);
+            const randomY = (Math.random() - 0.5) * (CONFIG.moveDistance * noButtonClickCount);
+
+            // Apply movement with smooth transition
+            btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            btnNo.style.transition = `all ${CONFIG.moveSpeed}s ease-out`;
+
+            // Show playful message
+            showPlayfulMessage(event);
+        }
+
+        /**
+         * Display playful message near the cursor/button
+         */
+        function showPlayfulMessage(event) {
+            const message = document.createElement('div');
+            message.className = 'playful-message';
+            message.textContent = CONFIG.playfulMessages[
+                Math.floor(Math.random() * CONFIG.playfulMessages.length)
+            ];
+
+            // Position at cursor location or random location
+            const x = event.clientX || Math.random() * window.innerWidth;
+            const y = event.clientY || Math.random() * window.innerHeight;
+
+            message.style.left = x + 'px';
+            message.style.top = y + 'px';
+
+            document.body.appendChild(message);
+
+            // Remove message after animation
+            setTimeout(() => message.remove(), 2000);
+        }
+
+        // ==================== PAGE TRANSITION ==================== 
+        /**
+         * Transition from Page 1 (Proposal) to Page 2 (YES Screen)
+         * Plays confetti animation
+         */
+        function transitionToYesPage() {
+            console.log('YES button clicked!');
+            // Trigger heartbeat animation on YES button
+            btnYes.classList.add('heartbeat');
+
+            // Small delay for visual effect
+            setTimeout(() => {
+                console.log('Transitioning to page 2...');
+                // Hide Page 1
+                page1.classList.add('hidden');
+
+                // Show Page 2
+                page2.classList.add('active');
+                console.log('Page 2 active:', page2.className);
+                isPage2Active = true;
+
+                // Create confetti
+                createConfetti();
+            }, 300);
+        }
+
+        // ==================== EVENT LISTENERS ==================== 
+        // YES Button - Navigate to YES page
+        btnYes.addEventListener('click', transitionToYesPage);
+
+        // NO Button - Run away on desktop hover
+        btnNo.addEventListener('mouseover', handleNoButtonInteraction);
+
+        // NO Button - Run away on mobile tap
+        btnNo.addEventListener('touchstart', handleNoButtonInteraction);
+        btnNo.addEventListener('click', handleNoButtonInteraction);
+
+        // ==================== PAGE LOAD ==================== 
+        /**
+         * Initialize on page load
+         */
+        window.addEventListener('load', () => {
+            // Start floating hearts
+            createFloatingHearts();
+        });
+
+        // ==================== RESPONSIVE NO BUTTON ==================== 
+        /**
+         * Adjust NO button behavior for mobile devices
+         * Increase movement speed on smaller screens
+         */
+        if (window.innerWidth < 768) {
+            CONFIG.moveSpeed = 0.15;
+            CONFIG.moveDistance = 80;
+        }
+    </script>
+</body>
+</html>
